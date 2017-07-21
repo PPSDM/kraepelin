@@ -35,22 +35,42 @@
 
     	<div id="number1"></div>
     	    	<div id="number2"></div>
+                        <div id="answers"></div>
+                           <div id="stringtosend"></div>
+                                  <button id="start" type="button">Start!</button>
+                        <button id="submit" type="button">Submit answer!</button>
         <div id="form"></div>
 
 <?php
 
-$numbers = [1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,5,4,3,2,1,6,7,8,9];
+$arrayindex = 0;
+
+$numbers[0] = [0,2,3,4,5,6,7,8,9,1,2,3,4,5,];
+$numbers[1] = [1,2,3,4,5,6,7,8,9,1,2,3,4,5,];
+$numbers[2] = [2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,5,4,3,2,1,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,5,4,3,2,1,6,7,8,9];
+$numbers[3] = [3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,5,4,3,2,1,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,5,4,3,2,1,6,7,8,9];
+//$numbers[4] = [4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,5,4,3,2,1,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,5,4,3,2,1,6,7,8,9];
+
+$answer = array();
+
+foreach($numbers as $numberskey => $numbersvalue) {
+
 
 ?>
-<div style="width:50%; height:50px;" class="your-class">
+<div id="numbers<?= $numberskey ?>" style="width:50%; display:none; height:50px;" class="your-class">
 	<?php
-	foreach ($numbers as $key => $value) {
+	foreach ($numbersvalue as $key => $value) {
 		echo '<div style="border-style: ridge;" ><h3>'.$value .'</h3></div>';
 	}
 
 	?>
 </div>
+<div id="answers<?= $numberskey ?>">
+</div>
 
+<?php
+}
+?>
 <div style="width:50%; margin-top: 100px; height:50px;" class="add-remove">
 
 	</div>
@@ -59,19 +79,82 @@ $numbers = [1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,5,4,3,2,1,6,7,8,9];
 
         <script type="text/javascript">
 
-        var clock = $('.your-clock').FlipClock({
+
+
+//clock.trigger('interval' function() { alert('das');});
+
+
+
+$(document).ready(function() {
+
+var index = 0;
+var max = <?= sizeof($numbers)?>;
+function func() {
+      $('.add-remove').hide();
+         $('#alpaca2').hide();
+    alert('FINISH');
+}
+        var clock = $('.your-clock').FlipClock(10,{
+          //clockFace: 'Counter'
+     countdown: true,
+            autoStart: false,
+            interval : 1000,
+            callbacks: {
+              interval: function() {
+                var time = this.factory.getTime().time;
+                
+                if((time % 10) == 0) {
+                  if (index < (max - 1)) {
+
+                  $("#numbers" + index).hide();
+                  $("#answers" + index).html($("#answers").html());
+                  //console.log('#anwers', $("#answers").html());
+                  $("#stringtosend").append(',' + $("#answers").html());
+                  $("#answers").empty();
+                  index++;
+                  $("#numbers" + index).show();
+                  console.log('#numbers' + index);
+                  this.factory.setTime(10);
+                } else {
+                  $("#numbers" + index).hide();
+                  $("#answers" + index).html($("#answers").html());
+  $("#stringtosend").append(',' + $("#answers").html());
+                  //$("#answers").empty();
+                  setTimeout(func, 1000);
+
+                }
+                }
+              }
+              
+            }
 });
 
+
+$('#start').click(function() {
+
+clock.start();
+});
+
+        function init()
+        {
+            index = 0;
+        }
+
 function myFunction() {
-    //alert('Hello');
-   clock.stop();
-   clock.setFaceValue(0);
+    //alert(index);
+    index++;
+   clock.reset();
    clock.start();
+ //  clock.setFaceValue(0);
+
 }
 
-            $(document).ready(function() {
 
-setInterval(myFunction, 30000);
+$('.your-class').on('edge', function(event, slick, direction){
+  alert('edge was hit. SHOULD HALT EVERYTHING UNTIL TIMER STOPS')
+});
+
+  //  setInterval(myFunction, 5000);
 
   $('.your-class').slick({
   infinite: false,
@@ -89,7 +172,7 @@ setInterval(myFunction, 30000);
                 $("#form").alpaca({
 
                     "schema": {
-                        "title":"Kraepelin",
+                        "title":"Kraepelin Test",
                         "description":"What do you think about Alpaca?",
                         "type":"object",
                         "properties": {
@@ -101,37 +184,31 @@ setInterval(myFunction, 30000);
                         }
                     },
 
-                    "options": {
-                        "form":{
-                            "attributes":{
-                                "action":"http://httpbin.org/post",
-                                "method":"post"
-                            },
-                            "buttons":{
-                            	"start":{
-                            		   "title": "Start",
-                            	},
-                                "submit":{
-                                    "title": "Send Form Data",
-                                    "click": function() {
-                                        var val = this.getValue();
-                                        if (this.isValid(true)) {
-                                            alert("Valid value: " + JSON.stringify(val, null, "  "));
-                                            this.ajaxSubmit().done(function() {
-                                                alert("Posted!");
-                                            });
-                                        } else {
-                                            alert("Invalid value: " + JSON.stringify(val, null, "  "));
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                    },
 
                 });
             });
+
+
+
+$('#submit').click(function() {
+//alert($('#answers').html());
+
+
+
+        $.post("process.php",
+        {
+          name: "Donald Duck",
+          city: "Duckburg",
+          answers: $('#stringtosend').html()
+        },
+        function(data,status){
+            alert("Data: " + data + "\nStatus: " + status);
+        });
+
+
+
+});
+
 
 $('#form').bind("enterKey",function(e){
 	if ($('#alpaca2').val() !== "" && 
@@ -142,19 +219,26 @@ $('#form').bind("enterKey",function(e){
 
 		) {
       	//alert();
-      	clock.stop();
+      	//clock.stop();
        $('.your-class').slick('slickNext');
        slideIndex = $('#alpaca2').val();
        $('#alpaca2').val('');
          //slideIndex++;
+         //  $('#answers').html('reno');
   $('.add-remove').slick('slickAdd','<div style="border-style: ridge;"><h3>' + slideIndex + '</h3></div>', true);
 
+  currentString = $('#answers').html();
+  $('#answers').html(currentString + slideIndex);
 } else {
+  
 	alert('INVALID VALUE');
 	       $('#alpaca2').val('');
+
 }
 
 });
+
+
 $('#form').keyup(function(e){
     if(e.keyCode == 13)
     {

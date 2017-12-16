@@ -30,6 +30,13 @@
     <body>
 
 
+
+server time :
+<br/>
+start test time :
+<br/><br/>
+
+
 <div class="your-clock"></div>
 		<script src="flipclock.min.js"></script>
 
@@ -45,8 +52,8 @@
 
 $arrayindex = 0;
 
-$numbers[0] = [0,2,3,4,5,6,7,8,9,1,2,3,4,5,];
-$numbers[1] = [1,2,3,4,5,6,7,8,9,1,2,3,4,5,];
+$numbers[0] = [9,7,2,9,5,6,6,7,3,6,4,0,0,0,0,0,0,0,0,0,0,0,0];
+$numbers[1] = [9,9,8,4,4,6,5,2,7,7,8,0,0,0,0,0,0,0,0,0,0,0,0];
 $numbers[2] = [2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,5,4,3,2,1,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,5,4,3,2,1,6,7,8,9];
 $numbers[3] = [3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,5,4,3,2,1,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,5,4,3,2,1,6,7,8,9];
 //$numbers[4] = [4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,5,4,3,2,1,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,5,4,3,2,1,6,7,8,9];
@@ -57,7 +64,7 @@ foreach($numbers as $numberskey => $numbersvalue) {
 
 
 ?>
-<div id="numbers<?= $numberskey ?>" style="width:50%; display:none; height:50px;" class="your-class">
+<div id="numbers<?= $numberskey ?>" style="width:50%; display:block; height:50px;" class="your-class">
 	<?php
 	foreach ($numbersvalue as $key => $value) {
 		echo '<div style="border-style: ridge;" ><h3>'.$value .'</h3></div>';
@@ -87,6 +94,7 @@ foreach($numbers as $numberskey => $numbersvalue) {
 
 $(document).ready(function() {
 
+$('.your-class').hide();
 var index = 0;
 var max = <?= sizeof($numbers)?>;
 function func() {
@@ -94,7 +102,7 @@ function func() {
          $('#alpaca2').hide();
     alert('FINISH');
 }
-        var clock = $('.your-clock').FlipClock(10,{
+        var clock = $('.your-clock').FlipClock(30,{
           //clockFace: 'Counter'
      countdown: true,
             autoStart: false,
@@ -103,7 +111,7 @@ function func() {
               interval: function() {
                 var time = this.factory.getTime().time;
                 
-                if((time % 10) == 0) {
+                if((time % 30) == 0) {
                   if (index < (max - 1)) {
 
                   $("#numbers" + index).hide();
@@ -114,13 +122,13 @@ function func() {
                   index++;
                   $("#numbers" + index).show();
                   console.log('#numbers' + index);
-                  this.factory.setTime(10);
+                  this.factory.setTime(30);
                 } else {
                   $("#numbers" + index).hide();
                   $("#answers" + index).html($("#answers").html());
   $("#stringtosend").append(',' + $("#answers").html());
                   //$("#answers").empty();
-                  setTimeout(func, 1000);
+                  setTimeout(func, 3000);
 
                 }
                 }
